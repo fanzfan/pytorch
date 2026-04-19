@@ -410,7 +410,7 @@ def muon(
 def param_groups_for_muon(
     module: torch.nn.Module,
     *,
-    exclude_name_patterns: Sequence[str] | None = None,
+    exclude_name_patterns: Sequence[str] | None = ("embed", "lm_head"),
     exclude_predicate: Callable[[str, torch.nn.Parameter], bool] | None = None,
 ) -> tuple[list[torch.nn.Parameter], list[torch.nn.Parameter]]:
     r"""Partition module parameters into a Muon group and an other group.
@@ -429,12 +429,17 @@ def param_groups_for_muon(
     Otherwise it is routed to ``muon_params``. Parameters with
     ``requires_grad=False`` are skipped.
 
+    By default ``exclude_name_patterns=("embed", "lm_head")``, so embeddings and
+    the final LM head are placed in ``other_params``. Pass an empty tuple to
+    include them in the Muon group.
+
 
     Args:
         module (torch.nn.Module): the model whose parameters are to be partitioned.
         exclude_name_patterns (Sequence[str]): fully-qualified parameter names
             containing any of these substrings are routed to ``other_params``.
-            (default: None)
+            Defaults to ``("embed", "lm_head")`` to match conventional Muon
+            usage. Pass an empty tuple to opt out. (default: ("embed", "lm_head"))
         exclude_predicate (Callable[[str, torch.nn.Parameter], bool], optional):
             additional user-supplied predicate. When it returns ``True`` for a
             parameter, that parameter is routed to ``other_params``. (default: None)

@@ -260,8 +260,10 @@ Below table is showing the stability status for fused implementations:
 Some optimizers like {class}`Muon` are designed for matrix-shaped hidden-layer
 parameters and expect biases, normalization scales, embeddings, and the final LM
 head to be optimized with a standard optimizer such as {class}`AdamW`. The helper
-{func}`torch.optim.param_groups_for_muon` produces this partition for a given
-{class}`~torch.nn.Module`:
+{func}`torch.optim.param_groups_for_muon` partitions parameters for Muon and a
+standard optimizer for a given {class}`~torch.nn.Module`; by default it excludes
+embeddings and the final LM head from the Muon group (pass
+``exclude_name_patterns=()`` to opt out):
 
 ```{eval-rst}
 .. autofunction:: param_groups_for_muon

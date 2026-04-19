@@ -2557,10 +2557,7 @@ class TestParamGroupsForMuon(TestCase):
 
     def test_defaults(self):
         model = _make_mixed_module()
-        exclude_name_patterns: list[str] = model.exclude_for_muon()
-        muon_params, other_params = torch.optim.param_groups_for_muon(
-            model, exclude_name_patterns=exclude_name_patterns
-        )
+        muon_params, other_params = torch.optim.param_groups_for_muon(model)
         muon_ids = {id(p) for p in muon_params}
         other_ids = {id(p) for p in other_params}
 
